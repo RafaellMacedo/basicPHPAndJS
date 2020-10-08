@@ -1,11 +1,19 @@
-CREATE TABLE curso (idcurso int not null auto_increment, curso varchar(30), constraint PK_CURSO primary key (idcurso));
+CREATE TABLE `testekabum`.`administrador` (
+  `idadministrador` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(100) NULL,
+  `login` VARCHAR(100) NOT NULL,
+  `password` VARCHAR(20) NOT NULL,
+  `ativo` TINYINT NOT NULL DEFAULT 1,
+  `create_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idadministrador`));
 
-CREATE TABLE aluno ( idaluno int not null auto_increment, nome varchar(50) not null, email varchar(100) null, idade int null, sexo varchar(10) null, idcurso int not null, constraint PK_ALUNO primary key (idaluno), constraint FK_ALUNO_IDCURSO foreign key (idcurso) references curso (idcurso));
+CREATE TABLE `testekabum`.`cliente` (
+  `idcliente` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(100) NULL,
+  `data_nascimento` DATE NULL,
+  `cpf` VARCHAR(14) NULL,
+  `rg` VARCHAR(12) NULL,
+  `telefone` VARCHAR(15) NULL,
+  `create_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idcliente`));
 
-CREATE TABLE usuario (idusuario int not null auto_increment, nome varchar(70) not null, login varchar(30) null, senha varchar(10) not null, nivel int not null, constraint PK_USUARIO primary key (idusuario));
-
-INSERT INTO usuario (nome, login, senha) VALUES ('Professor', 'professor', '1234');
-
-INSERT INTO curso (curso) VALUES ('Ciência da Computação'), ('Administração');
-
-INSERT INTO aluno (nome, email, idade, sexo, idcurso) VALUES ('Aluno A', 'alunoa@gmail.com', 20, 'feminino', 1), ('Aluno B', 'alunob@gmail.com', 21, 'masculino', 1), ('Aluno C', 'alunoc@gmail.com', 20, 'masculino', 1);
