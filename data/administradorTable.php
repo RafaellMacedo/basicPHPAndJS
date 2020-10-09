@@ -2,7 +2,7 @@
 
 session_start();
 
-require_once 'Base.php';
+require_once 'base.php';
 
 class Administrador extends Base{
 
@@ -32,7 +32,7 @@ class Administrador extends Base{
         ));
     }
 
-    public function inserir(){
+    public function insert(){
         $data = (object) $_POST;
 
         $db = $this->getDb();
@@ -52,15 +52,39 @@ class Administrador extends Base{
         
         echo json_encode(array(
             "data" => $result,
-            "idaluno" => $lastId, 
+            "success" => true
+            )
+        );
+    }
+
+    public function update(){
+        $data = (object) $_POST;
+
+        $db = $this->getDb();
+        $stm = $db->prepare('UPDATE administrador SELT nome = :nome, login = :login, senha = :senha WHERE idadministrador = :idadministrador');
+        $stm->bindValue(':nome',  $data->nome);
+        $stm->bindValue(':login', $data->login);
+        $stm->bindValue(':senha', $data->senha);
+        $stm->bindValue(':idadministrador', $data->idadministrador);
+        $stm->execute();
+        $result = $stm;
+        
+        if($result->rowCount()){
+            $success = true;
+        }else{
+            $success = false;
+        }
+        
+        echo json_encode(array(
+            "data" => $result,
             "success" => true
             )
         );
     }
 }
 
-$acao = $_POST["action"];
+$action = $_POST["action"];
 
-$login = new Administrador();
-$login->$acao();
+$class = new Administrador();
+$class->$action();
 ?>

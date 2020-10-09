@@ -9,6 +9,8 @@
                 let senha = $("#senha").val();
                 let confirmar_senha = $("#confirmar_senha").val();
                 let erro = false;
+                $("#btSalvar").html("Salvando...").prop('disabled', true);
+                $("#btCancel").prop('disabled', true);
 
                 if(nome.length == 0){
                     $("#nome").addClass("campo_vazio");
@@ -32,7 +34,8 @@
 
                 if(erro == true){
                     $("div.mensagem").addClass("alert-danger").html("<h4>Preencha todos os campos</h4>").show();
-
+                    $("#btSalvar").html("Salvar").prop('disabled', false);
+                    $("#btCancel").prop('disabled', false);
                 }else{
                     if(senha == confirmar_senha){
 
@@ -40,7 +43,7 @@
     						url: "data/administradorTable.php",
     						type: "POST",
     						data: {
-    							action: "inserir",
+    							action: "insert",
     							nome: nome,
     							login: login,
     							senha: senha,
@@ -49,18 +52,17 @@
     						data = JSON.parse(data);
 
     						if(data.success == true){
-    							$("div.mensagem").addClass("alert-success").html("<h4>Cadastrado com sucesso!</h4>").show();
+                                mensagem("alert-success","Cadastrado com sucesso! Redirecionando para página de login!");
     							setTimeout(function(){
                                     window.location = "index.php";
                                 }, 3000);
     						}else{
-    							$(".mensagem_erro").show();
-    							$(".mensagem_erro").append("Erro ao cadastrar!");
+                                mensagem("alert-danger","Erro ao cadastrar!");
                             }
     					});
 
                     } else {
-                        $("div.mensagem").addClass("alert-danger").html("<h4>Senhas diferentes</h4>").show();
+                        mensagem("alert-danger","Senhas diferentes");
                     }
                 }
             });
@@ -68,5 +70,10 @@
             $("#confirmar_senha").on('keyup',function(){
                 // let 
             });
+
+            function mensagem(tipo, mensagem){
+                $("div.mensagem").removeClass("alert-danger alert-success").html("").hide();
+                $("div.mensagem").addClass(tipo).html("<h4>" + mensagem + "</h4>").show();
+            }
         });
     </script>
