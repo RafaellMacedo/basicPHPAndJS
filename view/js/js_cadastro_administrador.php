@@ -56,7 +56,6 @@
     							setTimeout(function(){
                                     window.location = "index.php";
                                 }, 3000);
-                                
     						}else{
                                 mensagem("alert-danger","Erro ao cadastrar!");
                             }
