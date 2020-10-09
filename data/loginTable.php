@@ -10,18 +10,17 @@ class Login extends Base{
         $data = (object) $_POST;
 
         $db = $this->getDb();
-        $stm = $db->prepare('SELECT * FROM usuario WHERE login = :login AND senha = :password');
+        $stm = $db->prepare('SELECT * FROM administrador WHERE login = :login AND password = :password');
         $stm->bindValue(':login',    $data->login);
         $stm->bindValue(':password', $data->pass);
         $stm->execute();
         $result = $stm->fetch( PDO::FETCH_ASSOC);
 
-        if($result["idusuario"]){
+        if($result["idadministrador"]){
             $success = true;
 
-            $_SESSION["idusuario"] = $result["idusuario"];
+            $_SESSION["idadministrador"] = $result["idadministrador"];
             $_SESSION["nome"]      = $result["nome"];
-            $_SESSION["nivel"]     = $result["nivel"];
             $_SESSION["login"]     = true;
         }else{
             $success = false;

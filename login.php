@@ -33,27 +33,31 @@
         </nav>
 
         <div id="page-wrapper">
-
+            
             <div class="container-fluid">
-
                 <div class="row">
                     <div class="col-lg-12">
-                        
                         <form role="form">
-                            <span style="display:none;" class="mensagem_erro label label-danger"></span>
                             <div class="form-group">
                                 <label>Login</label>
                                 <input name="login" id="login" class="form-control" value="">
+                                <a href="#">Esqueci a senha</a>
                             </div>
-
                             <div class="form-group">
                                 <label>Senha</label>
                                 <input type="password" min="6" name="pass" id="pass" class="form-control" placeholder="" value="">
                             </div>
-
-                            <button type="button" class="btn btn-default" id="btn_login">Login</button>
-                            <a href="#">Esqueci a senha</a>
-
+                            <button type="button" class="btn btn-default btn-success" id="btn_login">Acessar Sistema</button>
+                            <button type="button" class="btn btn-default btn-primary" id="btn_cadastro">Cadastrar</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row cadastro">
+                    <div class="col-lg-12">
+                        <form role="form">
+                            <div class="form-group">
+                                <div style="display:none;" class="mensagem_erro alert alert-danger" role="alert"></div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -79,7 +83,7 @@
 
             }else{
                 $.ajax({
-                    url: "data/loginTable.php",
+                    url: "data/administradorTable.php",
                     type: "POST",
                     data: {
                         action: "select",
@@ -93,15 +97,22 @@
                     if(data.success == true){
                         window.location = "index.php";
                     }else{
-                        // $(".mensagem_erro").show();
-                        // $(".mensagem_erro").append("Login ou senha inválido!");
-                        // $(".mensagem_erro").append("Usuário não registrado, você só tem permissão de visualizar a lista de aluno!");
-                        // setTimeout(function(){window.location = "lista.php";}, 3000);
+                        $(".mensagem_erro").show();
+                        $(".mensagem_erro").append("Login ou senha inválido!");
                         
                     }
                 });
             }
         });
+
+        $("#btn_cadastro").on("click", function(){
+            window.location = "cadastroadministrador.php";
+        });
     </script>
+    <style type="text/css">
+        .cadastro {
+            margin-top: 1%;
+        }
+    </style>
 </body>
 </html>
