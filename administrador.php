@@ -69,7 +69,7 @@
             <div class="row">
                 <div class="col-lg-6">
                     <form role="form">
-                        <button type="button" class="btn btn-success" id="btSalvar">Salvar</button>
+                        <button type="button" class="btn btn-success" id="btCadastrar">Cadastrar</button>
                         <button type="button" class="btn btn-danger" id="btCancelar">Cancelar</button>
                     </form>
                 </div>
@@ -78,7 +78,9 @@
     </div>
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <?php include "view/js/js_cadastro_administrador.php"; ?>
+    <!-- Neste arquivo contém os métodos que podem ser utilizados em outras telas -->
+    <script src="js/view/metodo.js"></script>
+    <script src="js/view/jsAdministrador.js"></script>
     </body>
     <style type="text/css">
         .obrigatorio {

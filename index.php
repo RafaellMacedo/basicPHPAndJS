@@ -19,7 +19,7 @@ include "resources/layout/header.php"
                 <div class="row">
                     <div class="col-lg-12">
                         <h4 class="page-header">
-                            Aluno
+                            <?=$_SESSION['nome']?>
                         </h4>
                     </div>
                 </div>

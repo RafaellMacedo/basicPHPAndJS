@@ -106,7 +106,7 @@
         });
 
         $("#btn_cadastro").on("click", function(){
-            window.location = "cadastroadministrador.php";
+            window.location = "administrador.php";
         });
     </script>
     <style type="text/css">
