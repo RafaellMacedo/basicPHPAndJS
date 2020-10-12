@@ -1,0 +1,8 @@
+.obrigatorio {
+    color: red;
+}
+
+.campo_vazio {
+    border-color: red;
+    color: red;
+}

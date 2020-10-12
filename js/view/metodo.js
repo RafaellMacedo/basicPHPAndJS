@@ -8,13 +8,19 @@ function setTableColumn(count, campo, value, valueFormat = ""){
     return '<td id="' + id + '" data-' + campo + '="' + value + '">' + valueFormat + '</td>';
 }
 
-function setTableButton(count, value, css){
-    return '<button type="button" class="btn btn-' + css + ' bt' + value + '" id="bt' + value + '_' + count + '">' + value + '</button>';
+function setTableButton(count, value, referencia, css){
+    return '<button type="button" class="btn btn-' + css + ' bt' + referencia + '" id="bt' + referencia + '_' + count + '">' + value + '</button>';
 }
 
-function getTableDado(count, value){
-    let valueField = $("tr[id=cliente_" + count + "]").find('td[data-' + value + ']').data(value);
+function getTableDado(nomeColumn, count, value){
+    let valueField = $("tr[id=" + nomeColumn + "_" + count + "]").find('td[data-' + value + ']').data(value);
     $("#" + value).val(valueField);
+}
+
+function getTableDadoSelect(nomeColumn, count, value){
+    let valueField = $("tr[id=" + nomeColumn + "_" + count + "]").find('td[data-' + value + ']').data(value);
+
+    $("#" + value).html("<option value='" + valueField + "'>" + valueField + "</option>");
 }
 
 function mensagem(tipo, mensagem){

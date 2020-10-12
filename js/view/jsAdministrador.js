@@ -12,6 +12,8 @@ $(document).ready(function(){
         $("#btCadastrar").html("Cadastrando...").prop('disabled', true);
         $("#btCancel").prop('disabled', true);
 
+        removerCSSAdministrador();
+
         erro = campoVazio("nome", nome);
         erro = campoVazio("login", login);
         erro = campoVazio("senha", senha);
@@ -60,5 +62,12 @@ $(document).ready(function(){
     function habilitarBotao(){
         $("#btCadastrar").html("Cadastrar").prop('disabled', false);
         $("#btCancel").prop('disabled', false);
+    }
+
+    function removerCSSAdministrador(){
+        $("#nome").removeClass("campo_vazio");
+        $("#login").removeClass("campo_vazio");
+        $("#senha").removeClass("campo_vazio");
+        $("#confirmar_senha").removeClass("campo_vazio");
     }
 });

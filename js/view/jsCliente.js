@@ -23,22 +23,18 @@ $(document).ready(function(){
 
                 tr += '<td style="width:16%">';
 
-                tr += setTableButton(value.idcliente, "Editar", "primary");
-                tr += setTableButton(value.idcliente, "Deletar", "danger");
+                tr += setTableButton(value.idcliente, "Editar", "Editar", "primary");
+                tr += setTableButton(value.idcliente, "Deletar", "Deletar", "danger");
 
                 tr += '</td>';
                 tr += '</tr>';
 
-                $("table > tbody").append(tr);
+                $(".table-cliente > tbody").append(tr);
             });
         });
     }
 
     consultacliente();
-
-    $("#btCancelar").on("click", function(){
-        limparCampos();
-    });
 
     $("#btSalvar").on("click",function(){
         let idcliente       = $("#idcliente").val();
@@ -49,11 +45,13 @@ $(document).ready(function(){
         let telefone        = $("#telefone").val();
 		let erro            = false;
 
+        removerCSS();
+
         erro = campoVazio("nome", nome);
-        erro = campoVazio("data_nascimento", data_nascimento);
-        erro = campoVazio("cpf", cpf);
-        erro = campoVazio("rg", rg);
-        erro = campoVazio("telefone", telefone);
+        erro = campoVazio("data_nascimento", data_nascimento) ? true : erro;
+        erro = campoVazio("cpf", cpf) ? true : erro;
+        erro = campoVazio("rg", rg) ? true : erro;
+        erro = campoVazio("telefone", telefone) ? true : erro;
 
         if(erro == true){
             mensagem("alert-danger","Preencha todos os campos");
@@ -95,77 +93,42 @@ $(document).ready(function(){
 
 					tr += '<td style="width:16%">';
 
-                    tr += setTableButton(count, "Editar", "primary");
-                    tr += setTableButton(count, "Deletar", "danger");
+                    tr += setTableButton(count, "Editar", "Editar", "primary");
+                    tr += setTableButton(count, "Deletar", "Deletar", "danger");
 
 					tr += '</td>';
 
                     if(action == "insert"){
                         tr = '<tr id="cliente_' + count + '">' + tr + '</tr>';
-                        $("table > tbody").append(tr);
+                        $(".table-cliente > tbody").append(tr);
 
                     } else {
-                        $("table > tbody > tr[id=cliente_" + count + "]").html(tr).addClass("tr-success");
+                        $(".table-cliente > tbody > tr[id=cliente_" + count + "]").html(tr).addClass("tr-success");
                     }
 
                     limparCampos();
 
                     setTimeout(function(){
                         $("div.mensagem").removeClass("alert-danger", "alert-success").html("").hide();
-                        $("table > tbody > tr[id=cliente_" + count + "]").removeClass("tr-success");
+                        $(".table-cliente > tbody > tr[id=cliente_" + count + "]").removeClass("tr-success");
                     }, 2000);
 				}else{
                     mensagem("alert-danger","Erro ao salvar as informações do cliente!");
                 }
 			});
-
-            // }else{
-//                   $("tr[id=cliente_" + idcliente + "] > td[id=nome_" + idcliente + "]").removeAttr("data-nome");
-//                   $("tr[id=cliente_" + idcliente + "] > td[id=idade_" + idcliente + "]").removeAttr("data-idade");
-//                   $("tr[id=cliente_" + idcliente + "] > td[id=sexo_" + idcliente + "]").removeAttr("data-sexo");
-//                   $("tr[id=cliente_" + idcliente + "] > td[id=email_" + idcliente + "]").removeAttr("data-email");
-//                   $("tr[id=cliente_" + idcliente + "] > td[id=curso_" + idcliente + "]").removeAttr("data-curso");
-
-//                   $("tr[id=cliente_" + idcliente + "] > td[id=nome_" + idcliente + "]").attr("data-nome",nome).html(nome);
-//                   $("tr[id=cliente_" + idcliente + "] > td[id=idade_" + idcliente + "]").attr("data-idade",idade).html(idade);
-//                   $("tr[id=cliente_" + idcliente + "] > td[id=sexo_" + idcliente + "]").attr("data-sexo",sexo).html(sexo);
-//                   $("tr[id=cliente_" + idcliente + "] > td[id=email_" + idcliente + "]").attr("data-email",email).html(email);
-//                   $("tr[id=cliente_" + idcliente + "] > td[id=curso_" + idcliente + "]").attr("data-curso",curso).html($("#curso option:selected").text());
-
-//                   $.ajax({
-				// 	url: "data/clienteTable.php",
-				// 	type: "POST",
-				// 	data: {
-				// 		action: "alterar",
-				// 		idcliente: idcliente,
-				// 		nome: nome,
-				// 		email: email,
-				// 		idade: idade,
-				// 		sexo: sexo,
-				// 		idcurso: curso
-				// 	}
-				// }).done(function(data) {
-				// 	data = JSON.parse(data);
-				// 	if(data.success == true){
-				// 		$("div.mensagem").addClass("alert-success").html("<h4>Alterado com sucesso!</h4>").show();
-				// 	}else{
-				// 		$(".mensagem_erro").show();
-				// 		$(".mensagem_erro").append("Não foi possivel alterar o cliente");
-				// 	}
-				// 	LimpaDados();
-				// });
-            // }
         }
     });
 
     $(document).on("click","button.btEditar",function(){
         let idcliente = this.id.replace(/[^\d]+/g,'');
+        limparCampos();
+        $("div.mensagem").removeClass("alert-danger", "alert-success").html("").hide();
 
-        getTableDado(idcliente, "nome");
-        getTableDado(idcliente, "data_nascimento");
-        getTableDado(idcliente, "cpf");
-        getTableDado(idcliente, "rg");
-        getTableDado(idcliente, "telefone");
+        getTableDado("cliente", idcliente, "nome");
+        getTableDado("cliente", idcliente, "data_nascimento");
+        getTableDado("cliente", idcliente, "cpf");
+        getTableDado("cliente", idcliente, "rg");
+        getTableDado("cliente", idcliente, "telefone");
 
         $("#idcliente").val(idcliente);
     });
@@ -194,13 +157,28 @@ $(document).ready(function(){
             $("#cliente_"+idcliente).remove();
         }
     });
+
+    $("#btCancelar").on("click", function(){
+        limparCampos();
+        $("div.mensagem").removeClass("alert-danger", "alert-success").html("").hide();
+    });
 });
 
 function limparCampos(){
+    $("#idcliente").val("");
     $("#nome").removeClass("campo_vazio").val("");
     $("#data_nascimento").removeClass("campo_vazio").val("");
     $("#cpf").removeClass("campo_vazio").val("");
     $("#rg").removeClass("campo_vazio").val("");
     $("#telefone").removeClass("campo_vazio").val("");
     $("#idcliente").removeClass("campo_vazio").val("");
+}
+
+function removerCSS(){
+    $("#nome").removeClass("campo_vazio");
+    $("#data_nascimento").removeClass("campo_vazio");
+    $("#cpf").removeClass("campo_vazio");
+    $("#rg").removeClass("campo_vazio");
+    $("#telefone").removeClass("campo_vazio");
+    $("#idcliente").removeClass("campo_vazio");
 }

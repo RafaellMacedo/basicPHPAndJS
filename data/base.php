@@ -14,7 +14,7 @@ abstract class Base {
 
     $this->config['adapter']  = "mysql";
     $this->config['hostname'] = "localhost";
-    $this->config['dbname']   = "testekabum";
+    $this->config['dbname']   = "bdprojeto";
     $this->config['user']     = "testekabum";
     $this->config['password'] = "t1st1k@Bum";
 

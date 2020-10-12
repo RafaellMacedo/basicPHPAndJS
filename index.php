@@ -4,6 +4,9 @@ session_start();
 if(!isset($_SESSION["login"])){
     header("Location:login.php");
 }
+
+$active_menu = "home";
+
 include "resources/layout/header.php"
 
 ?>

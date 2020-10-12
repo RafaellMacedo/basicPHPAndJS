@@ -13,7 +13,7 @@
     <link href="css/sb-admin.css" rel="stylesheet">
     <link href="css/plugins/morris.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
+    <link href="css/view/cssAdministrador.css" rel="stylesheet" type="text/css">
 </head>
 <style type="text/css">
     #page-wrapper{
@@ -82,14 +82,4 @@
     <script src="js/view/metodo.js"></script>
     <script src="js/view/jsAdministrador.js"></script>
     </body>
-    <style type="text/css">
-        .obrigatorio {
-            color: red;
-        }
-
-        .campo_vazio {
-            border-color: red;
-            color: red;
-        }
-    </style>
 </html>
