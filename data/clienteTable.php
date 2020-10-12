@@ -12,23 +12,14 @@ class Cliente extends Base {
         $db = $this->getDb();
         $stm = $db->prepare('SELECT cliente.*,
                 DATE_FORMAT(cliente.data_nascimento, "%d/%m/%Y") AS data_nascimento_formatado,
-                endereco.idendereco,
-                endereco.endereco,
-                endereco.numero,
-                endereco.complemento,
-                endereco.bairro,
-                endereco.cidade,
-                endereco.uf
+                IF(e.idcliente IS NOT NULL, true, false) AS contem_endereco
             FROM cliente
-                LEFT JOIN endereco ON endereco.idcliente = cliente.idcliente');
+                LEFT JOIN (SELECT idcliente FROM endereco GROUP BY idcliente) AS e ON e.idcliente = cliente.idcliente');
         $stm->execute();
         $result = $stm->fetchAll( PDO::FETCH_ASSOC);
 
         foreach ($result as $key => $value) {
             $result[$key]["nome"]     = utf8_encode($result[$key]["nome"]);
-            $result[$key]["endereco"] = utf8_encode($result[$key]["endereco"]);
-            $result[$key]["bairro"]   = utf8_encode($result[$key]["bairro"]);
-            $result[$key]["cidade"]   = utf8_encode($result[$key]["cidade"]);
         }
 
         echo json_encode(array(

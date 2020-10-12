@@ -13,23 +13,71 @@ $(document).ready(function(){
             result = JSON.parse(result);
 
             $.each(result.data, function(index, value){
+                let idcliente = value.idcliente;
 
-                let tr = '<tr id="cliente_' + value.idcliente + '">';
-                tr += setTableColumn(value.idcliente, "nome", value.nome);
-                tr += setTableColumn(value.idcliente, "data_nascimento", value.data_nascimento, value.data_nascimento_formatado);
-                tr += setTableColumn(value.idcliente, "cpf", value.cpf);
-                tr += setTableColumn(value.idcliente, "rg", value.rg);
-                tr += setTableColumn(value.idcliente, "telefone", value.telefone);
+                let tr = '<tr id="cliente_' + idcliente + '">';
+                tr += setTableColumn(idcliente, "nome", value.nome);
+                tr += setTableColumn(idcliente, "data_nascimento", value.data_nascimento, value.data_nascimento_formatado);
+                tr += setTableColumn(idcliente, "cpf", value.cpf);
+                tr += setTableColumn(idcliente, "rg", value.rg);
+                tr += setTableColumn(idcliente, "telefone", value.telefone);
 
                 tr += '<td style="width:16%">';
 
-                tr += setTableButton(value.idcliente, "Editar", "Editar", "primary");
-                tr += setTableButton(value.idcliente, "Deletar", "Deletar", "danger");
+                tr += setTableButton(idcliente, "Editar", "Editar", "primary");
+                tr += setTableButton(idcliente, "Deletar", "Deletar", "danger");
 
                 tr += '</td>';
                 tr += '</tr>';
 
+                if(value.contem_endereco == "1"){
+                    tr += '<tr><td colspan="6" class="column-center"><table class="table-cliente-endereco_' + idcliente + '">';
+                    tr += '<thead>';
+                    tr += '<tr>';
+                    tr += '<th class="column-center column-11">cep</th>';
+                    tr += '<th class="column-center">Referência</th>';
+                    tr += '<th class="column-center column-30">Endereço</th>';
+                    tr += '<th class="column-center">Número</th>';
+                    tr += '</tr>';
+                    tr += '</thead>';
+                    tr += '<tbody>';
+                    tr += '</tbody></table></td></tr>';
+                }
+
                 $(".table-cliente > tbody").append(tr);
+
+                if(value.contem_endereco == "1"){
+                    consultaEndereco(idcliente);
+                }
+            });
+        });
+    }
+
+    function consultaEndereco(idcliente){
+         $.ajax({
+            url: "data/enderecoTable.php",
+            type: "POST",
+            data: {
+                action: "select",
+                idcliente: idcliente
+            }
+        }).done(function(result) {
+            result = JSON.parse(result);
+            let tr = '';
+
+            $.each(result.data, function(index, value){
+                let idendereco = value.idendereco;
+
+                tr = '<tr id="endereco_' + idendereco + '">';
+
+                tr += setTableColumn(idendereco, "cep", value.cep);
+                tr += setTableColumn(idendereco, "referencia", value.referencia);
+                tr += setTableColumn(idendereco, "endereco", value.endereco);
+                tr += setTableColumn(idendereco, "numero", value.numero);
+
+                tr += '</tr>';
+
+                $(".table-cliente-endereco_" + idcliente + " > tbody").append(tr);
             });
         });
     }
@@ -81,36 +129,74 @@ $(document).ready(function(){
 				if(data.success == true){
                     mensagem("alert-success", "Registro salvo com sucesso!");
 
-					count = idcliente == "" ? data.idcliente : idcliente;
+					idcliente = idcliente == "" ? data.idcliente : idcliente;
 
 					let tr = '';
 
-					tr += setTableColumn(count, "nome", nome);
-                    tr += setTableColumn(count, "data_nascimento", data_nascimento);
-                    tr += setTableColumn(count, "cpf", cpf);
-                    tr += setTableColumn(count, "rg", rg);
-                    tr += setTableColumn(count, "telefone", telefone);
+					tr += setTableColumn(idcliente, "nome", nome);
+                    tr += setTableColumn(idcliente, "data_nascimento", data_nascimento);
+                    tr += setTableColumn(idcliente, "cpf", cpf);
+                    tr += setTableColumn(idcliente, "rg", rg);
+                    tr += setTableColumn(idcliente, "telefone", telefone);
 
 					tr += '<td style="width:16%">';
 
-                    tr += setTableButton(count, "Editar", "Editar", "primary");
-                    tr += setTableButton(count, "Deletar", "Deletar", "danger");
+                    tr += setTableButton(idcliente, "Editar", "Editar", "primary");
+                    tr += setTableButton(idcliente, "Deletar", "Deletar", "danger");
 
 					tr += '</td>';
 
                     if(action == "insert"){
-                        tr = '<tr id="cliente_' + count + '">' + tr + '</tr>';
+                        tr = '<tr id="cliente_' + idcliente + '">' + tr + '</tr>';
                         $(".table-cliente > tbody").append(tr);
 
+                        let lista_endereco = $('.table-endereco > tbody > tr').get().map(function(row) {
+                            let retornoEndereco = {};
+
+                            let endereco = $(row).find('td').get().map(function(cell) {
+                                let celula   = {};
+                                let name     = cell.id.replace(/[\_\0-9]+/g,'');
+                                let value    = $(cell).html().search("button") != -1 ? "" : $(cell).html();
+                                celula[name] = value;
+                                return celula;
+                            });
+
+                            $.each(endereco, function(key, value){
+                                let chave = Object.keys(endereco[key]);
+
+                                if(chave[0] != ""){
+                                    let conteudo = Object.values(endereco[key]);
+                                    retornoEndereco[chave[0]] = conteudo[0];
+                                }
+                            });
+
+                            return retornoEndereco;
+                        });
+
+                        $.ajax({
+                            url: "data/enderecoTable.php",
+                            type: "POST",
+                            data: {
+                                action: action,
+                                idcliente: idcliente,
+                                lista_endereco: lista_endereco
+                            }
+                        }).done(function(data) {
+                            data = JSON.parse(data);
+
+                            if(data.success == true){
+                            }
+                        });
+
                     } else {
-                        $(".table-cliente > tbody > tr[id=cliente_" + count + "]").html(tr).addClass("tr-success");
+                        $(".table-cliente > tbody > tr[id=cliente_" + idcliente + "]").html(tr).addClass("tr-success");
                     }
 
                     limparCampos();
 
                     setTimeout(function(){
                         $("div.mensagem").removeClass("alert-danger", "alert-success").html("").hide();
-                        $(".table-cliente > tbody > tr[id=cliente_" + count + "]").removeClass("tr-success");
+                        $(".table-cliente > tbody > tr[id=cliente_" + idcliente + "]").removeClass("tr-success");
                     }, 2000);
 				}else{
                     mensagem("alert-danger","Erro ao salvar as informações do cliente!");
@@ -134,7 +220,7 @@ $(document).ready(function(){
     });
 
     $(document).on("click","button.btDeletar",function(){
-        var idcliente = this.id.replace(/[^\d]+/g,'');
+        let idcliente = this.id.replace(/[^\d]+/g,'');
         if(confirm("Deseja realmente deletar este cliente?")){
 			$.ajax({
 				url: "data/clienteTable.php",

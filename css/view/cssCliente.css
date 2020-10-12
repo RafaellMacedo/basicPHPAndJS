@@ -69,3 +69,11 @@
 .column-11 {
     width: 11%;
 }
+
+.column-center {
+    text-align: center;
+}
+
+.column-center > table {
+    width: 100%;
+}
