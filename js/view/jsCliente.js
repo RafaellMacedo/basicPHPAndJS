@@ -135,7 +135,7 @@ $(document).ready(function(){
 					let tr = '';
 
 					tr += setTableColumn(idcliente, "nome", nome);
-                    tr += setTableColumn(idcliente, "data_nascimento", data_nascimento);
+                    tr += setTableColumn(idcliente, "data_nascimento", data_nascimento, formatarData(data_nascimento));
                     tr += setTableColumn(idcliente, "cpf", cpf);
                     tr += setTableColumn(idcliente, "rg", rg);
                     tr += setTableColumn(idcliente, "telefone", telefone);
@@ -347,4 +347,9 @@ function removerCSS(){
     $("#rg").removeClass("campo_vazio");
     $("#telefone").removeClass("campo_vazio");
     $("#idcliente").removeClass("campo_vazio");
+}
+
+function formatarData(data){
+    data = data.split("-");
+    return data[2] + "/" + data[1] + "/" + data[0];
 }
