@@ -18,18 +18,18 @@ Para que o sistema esteja funcionando, é necessário ter instalado na máquina 
 
 O projeto esta montado seguinte diretório
 
-<b>data/</b>
-	Contém os arquivos que realizam ações ao banco de dados. O arquivo <b>base.php</b> tem a configuração de acesso ao banco de dados.
+> <b>data/</b>
+>>Contém os arquivos que realizam ações ao banco de dados. O arquivo <b>base.php</b> tem a configuração de acesso ao banco de dados.
 
-<b>css/view</b>
-	Contém o CSS utilizado em cada tela do projeto.
+> <b>css/view</b>
+>>Contém o CSS utilizado em cada tela do projeto.
 
-<b>js/view</b>
-	Contém os métodos em Javascript utilizado em cada tela do projeto.
-	No arquivo metodo.js estão desenvolvidos os métodos genêricos que são chamados utilizados em mais de uma tela do projeto.
+> <b>js/view</b>
+>> Contém os métodos em Javascript utilizado em cada tela do projeto.
+>> No arquivo metodo.js estão desenvolvidos os métodos genêricos que são chamados utilizados em mais de uma tela do projeto.
 
-<b>resources/layout</b>
-	Contém os arquivos dos blocos Header e Menu do projeto.
+> <b>resources/layout</b>
+>> Contém os arquivos dos blocos Header e Menu do projeto.
 
 <b>CONFIGURANDO BANCO DE DADOS NO PROJETO</b>
 
