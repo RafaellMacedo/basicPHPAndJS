@@ -1,10 +1,8 @@
-Em construção...
-
-Este projeto foi focado em redução de código e reaproveitamento de métodos. Foi utilizado as linguagens de programação PHP e Javascript, banco de dados MySQL, a biblioteca JQuery 3.0 e o framework Boostrap.
+Este projeto foi focado em redução de código e reaproveitamento de métodos. Foram utilizadas as linguagens de programação PHP e Javascript, banco de dados MySQL, a biblioteca JQuery 3.0 e o framework Boostrap.
 
 No PHP não foi utilizado framework, apenas Orientação ao Objeto e PDO para ações ao banco de dados.
 
-Para que o sistema esteja funcionando, é necessário ter instalado na máquina alguns pacotes de serviços, que esta listado abaixo de acordo com o sistema operacional.
+Para que o sistema esteja funcionando, é necessário a instalação de alguns pacotes de serviços, de acordo com o sistema operacional utilizado. Segue abaixo:
 
 > <b>Linux</b>
 >> Apache2
@@ -16,17 +14,17 @@ Para que o sistema esteja funcionando, é necessário ter instalado na máquina 
 > <b>Window</b>
 >> Instalar o WAMP https://www.wampserver.com/en/]
 
-O projeto esta montado seguinte diretório
+O projeto foi estruturado visando a otimização de código, separando o back-end (PHP) do front-end (Javascript). No front-end está separado o HTML, CSS e Javascript em seus respectivos arquivos.
 
 > <b>data/</b>
->>Contém os arquivos que realizam ações ao banco de dados. O arquivo <b>base.php</b> tem a configuração de acesso ao banco de dados.
+>>Contém os arquivos que realizam ações do banco de dados. O arquivo <b>base.php</b> tem a configuração de conexão ao banco de dados.
 
 > <b>css/view</b>
 >>Contém o CSS utilizado em cada tela do projeto.
 
 > <b>js/view</b>
->> Contém os métodos em Javascript utilizado em cada tela do projeto.
->> No arquivo metodo.js estão desenvolvidos os métodos genêricos que são chamados utilizados em mais de uma tela do projeto.
+>> Contém os métodos em Javascript utilizados em cada tela do projeto.
+>> No arquivo metodo.js estão desenvolvidos os métodos genêricos que são utilizados em mais de uma tela do projeto.
 
 > <b>resources/layout</b>
 >> Contém os arquivos dos blocos Header e Menu do projeto.
@@ -35,13 +33,13 @@ O projeto esta montado seguinte diretório
 
 Abra o arquivo <b>data/base.php</b>
 
-Nas linhas 18 <b>$this->config['user']</b> e 19 <b>$this->config['user']</b> alterar os valores contido dentro das aspas duplas, informando o usuário e a senha para acessar o banco de dados.
+Nas linhas 18 <b>$this->config['user']</b> e 19 <b>$this->config['user']</b> alterar os valores contidos dentro das aspas duplas, informando o usuário e a senha para acesso ao banco de dados.
 
 <b>CRIANDO BANCO DE DADOS</b>
 
-Para iniciar o projeto, primeiro é necessário criar um schema (banco de dados) com o nome <b>bdprojeto</b>
+Para iniciar o projeto, é necessário criar um schema (banco de dados) com o nome <b>bdprojeto</b>
 
-Com o banco de dados criado execute o código abaixo de criação de todas as tabelas que este projeto utiliza.
+Com o banco de dados criado e configurado o arquivo base.php com o usuário e senha, execute o código abaixo de criação de todas as tabelas que este projeto utiliza.
 
 
 CREATE TABLE `bdprojeto`.`administrador` (
@@ -88,4 +86,6 @@ DEFAULT CHARACTER SET = utf8;
 
 <b>ACESSANDO O SISTEMA</b>
 
-Para acessar o sistema, só é necessário cadastrar um administrador por meio da tela de cadastro, que pode ser acessado pela tela de login do sistema.
+Para acessar o sistema, é necessário cadastrar um administrador por meio da tela de login.
+
+
