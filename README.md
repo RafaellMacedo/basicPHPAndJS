@@ -4,21 +4,36 @@ Este projeto foi focado em redução de código e reaproveitamento de métodos. 
 
 No PHP não foi utilizado framework, apenas Orientação ao Objeto e PDO para ações ao banco de dados.
 
+Para que o sistema esteja funcionando, é necessário ter instalado na máquina alguns pacotes de serviços, que esta listado abaixo de acordo com o sistema operacional.
+
+> <b>Linux</b>
+>> Apache2
+>> Php-7.2
+>> mysql-server
+>> libapache2-mod-php 
+>> php-mysql
+
+> <b>Window</b>
+>> Instalar o WAMP https://www.wampserver.com/en/]
+
 O projeto esta montado seguinte diretório
 
-css/view
+<b>data/</b>
+	Contém os arquivos que realizam ações ao banco de dados. O arquivo <b>base.php</b> tem a configuração de acesso ao banco de dados.
+
+<b>css/view</b>
 	Contém o CSS utilizado em cada tela do projeto.
 
-js/view
+<b>js/view</b>
 	Contém os métodos em Javascript utilizado em cada tela do projeto.
 	No arquivo metodo.js estão desenvolvidos os métodos genêricos que são chamados utilizados em mais de uma tela do projeto.
 
-resources/layout
+<b>resources/layout</b>
 	Contém os arquivos dos blocos Header e Menu do projeto.
 
 <b>CONFIGURANDO BANCO DE DADOS NO PROJETO</b>
 
-Abra o arquivo data/base.php
+Abra o arquivo <b>data/base.php</b>
 
 Nas linhas 18 <b>$this->config['user']</b> e 19 <b>$this->config['user']</b> alterar os valores contido dentro das aspas duplas, informando o usuário e a senha para acessar o banco de dados.
 
@@ -70,3 +85,7 @@ CREATE TABLE IF NOT EXISTS `bdprojeto`.`endereco` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
+
+<b>ACESSANDO O SISTEMA</b>
+
+Para acessar o sistema, só é necessário cadastrar um administrador por meio da tela de cadastro, que pode ser acessado pela tela de login do sistema.
