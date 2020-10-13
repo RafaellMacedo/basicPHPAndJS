@@ -22,17 +22,18 @@ class Cliente extends Base {
             $result[$key]["nome"]     = utf8_encode($result[$key]["nome"]);
         }
 
-        echo json_encode(array(
+        echo json_encode([
             "data" => $result,
             "success" => true
-            )
-        );
+        ]);
     }
 
     public function insert() {
         $data = (object) $_POST;
 
         $db = $this->getDb();
+        $db->beginTransaction();
+
         $stm = $db->prepare('INSERT INTO cliente (
                 nome,
                 data_nascimento,
@@ -53,26 +54,28 @@ class Cliente extends Base {
         $stm->bindValue(':telefone', $data->telefone);
         $stm->execute();
         $lastId = $db->lastInsertId();
-        $result = $stm;
+        $insert = $stm;
 
-        if($result->rowCount()){
+        if($insert->rowCount()){
+            $db->commit();
             $success = true;
         }else{
+            $db->rollback();
             $success = false;
         }
 
-        echo json_encode(array(
-            "data" => $result,
+        echo json_encode([
             "idcliente" => $lastId,
             "success" => true
-            )
-        );
+        ]);
     }
 
     public function update() {
         $data = (object) $_POST;
 
         $db = $this->getDb();
+        $db->beginTransaction();
+
         $stm = $db->prepare('UPDATE cliente SET
                 nome = :nome,
                 data_nascimento = :data_nascimento,
@@ -87,34 +90,72 @@ class Cliente extends Base {
         $stm->bindValue(':rg', $data->rg);
         $stm->bindValue(':telefone', $data->telefone);
         $stm->execute();
-        $result = $stm;
+        $update = $stm;
 
-        if($result->rowCount()){
+        if($update->rowCount()){
+            $db->commit();
             $success = true;
         }else{
+            $db->rollback();
+            $success = false;
+        }
+
+        echo json_encode([
+            "success" => true
+        ]);
+    }
+
+    public function delete() {
+        $data = (object) $_POST;
+
+        $db = $this->getDb();
+        $stm = $db->prepare('SELECT * FROM endereco WHERE endereco.idcliente = :idcliente');
+        $stm->bindValue(':idcliente', $data->idcliente);
+        $stm->execute();
+        $result = $stm->fetchAll( PDO::FETCH_ASSOC);
+
+        if(count($result) > 0){
+            $db->beginTransaction();
+
+            $stm = $db->prepare('DELETE FROM endereco WHERE idcliente = :idcliente');
+            $stm->bindValue(':idcliente', $data->idcliente);
+            $stm->execute();
+            $delete = $stm;
+
+            if($delete->rowCount()){
+                $db->commit();
+                $erro = false;
+            } else {
+                $db->rollback();
+                $erro = true;
+            }
+        } else {
+            $erro = false;
+        }
+
+        if(!$erro){
+            $db->beginTransaction();
+
+            $stm = $db->prepare('DELETE FROM cliente WHERE idcliente = :idcliente');
+            $stm->bindValue(':idcliente', $data->idcliente);
+            $stm->execute();
+            $delete = $stm;
+
+            if($delete->rowCount()){
+                $db->commit();
+                $success = true;
+            }else{
+                $db->rollback();
+                $success = false;
+            }
+        }else{
+            $db->rollback();
             $success = false;
         }
 
         echo json_encode(array(
-            "success" => true
-            )
-        );
-    }
-
-    public function deletar() {
-        $data = (object) $_POST;
-
-        $db = $this->getDb();
-        $stm = $db->prepare('DElETE FROM aluno WHERE idaluno = :idaluno');
-        $stm->bindValue(':idaluno', $data->idaluno);
-        $stm->execute();
-        $result = $stm;
-
-        if($result->rowCount()){
-            $success = true;
-        }else{
-            $success = false;
-        }
+            "success" => $success
+        ));
     }
 }
 

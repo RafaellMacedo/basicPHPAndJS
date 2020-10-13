@@ -100,8 +100,8 @@ $(document).ready(function(){
     });
 
     $(document).on("click","button.btEditarEndereco",function(){
+        limparEndereco();
         let idendereco = this.id.replace(/[^\d]+/g,'');
-        limparCampos();
         $("div.mensagem").removeClass("alert-danger", "alert-success").html("").hide();
 
         getTableDado("endereco", idendereco, "cep");

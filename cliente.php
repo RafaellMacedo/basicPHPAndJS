@@ -61,16 +61,6 @@ $active_menu = "cliente";
                                 <input type="text" class="form-control" name="telefone" id="telefone" placeholder="Informe seu Telefone">
                             </div>
                         </div>
-                        <div class="col-lg-2 btn-position-right">
-                            <div class="form-group">
-                                <button type="button" class="btn btn-danger" id="btCancelar">Cancelar</button>
-                            </div>
-                        </div>
-                        <div class="col-lg-1 btn-position-right">
-                            <div class="form-group">
-                                <button type="button" class="btn btn-success" id="btSalvar">Salvar</button>
-                            </div>
-                        </div>
                     </div>
                     <span class="group-endereco">
                         <div class="row">
@@ -196,10 +186,21 @@ $active_menu = "cliente";
                             </div>
                         </div>
                     </span>
+                    <div class="col-lg-2 btn-position-right">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-danger" id="btCancelar">Cancelar</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 btn-position-right">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-success" id="btSalvar">Salvar Cliente</button>
+                        </div>
+                    </div>
                 </span>
                 <div class="row table-space">
                     <div class="col-lg-12">
                         <div class="table-responsive">
+                            <div class="mensagem-table alert"></div>
                             <table class="table table-hover table-cliente">
                                 <thead>
                                     <tr>

@@ -31,7 +31,8 @@ $(document).ready(function(){
                 tr += '</tr>';
 
                 if(value.contem_endereco == "1"){
-                    tr += '<tr><td colspan="6" class="column-center"><table class="table-cliente-endereco_' + idcliente + '">';
+                    tr += '<tr id="tr_cliente-endereco_' + idcliente + '">';
+                    tr += '<td colspan="6" class="column-center"><table class="table-cliente-endereco_' + idcliente + '">';
                     tr += '<thead>';
                     tr += '<tr>';
                     tr += '<th class="column-center column-11">cep</th>';
@@ -148,7 +149,6 @@ $(document).ready(function(){
 
                     if(action == "insert"){
                         tr = '<tr id="cliente_' + idcliente + '">' + tr + '</tr>';
-                        $(".table-cliente > tbody").append(tr);
 
                         let lista_endereco = $('.table-endereco > tbody > tr').get().map(function(row) {
                             let retornoEndereco = {};
@@ -173,6 +173,23 @@ $(document).ready(function(){
                             return retornoEndereco;
                         });
 
+                        if(lista_endereco.length > 0){
+                            tr += '<tr id="tr_cliente-endereco_' + idcliente + '">';
+                            tr += '<td colspan="6" class="column-center"><table class="table-cliente-endereco_' + idcliente + '">';
+                            tr += '<thead>';
+                            tr += '<tr>';
+                            tr += '<th class="column-center column-11">cep</th>';
+                            tr += '<th class="column-center">Referência</th>';
+                            tr += '<th class="column-center column-30">Endereço</th>';
+                            tr += '<th class="column-center">Número</th>';
+                            tr += '</tr>';
+                            tr += '</thead>';
+                            tr += '<tbody>';
+                            tr += '</tbody></table></td></tr>';
+                        }
+
+                        $(".table-cliente > tbody").append(tr);
+
                         $.ajax({
                             url: "data/enderecoTable.php",
                             type: "POST",
@@ -185,11 +202,25 @@ $(document).ready(function(){
                             data = JSON.parse(data);
 
                             if(data.success == true){
+                                limparEndereco();
+                                $(".table-endereco > tbody").html("");
+                            } else {
+                                mensage("alert-danger", "Erro ao cadastrar os endereços");
                             }
                         });
 
+                        if(lista_endereco.length > 0){
+                            consultaEndereco(idcliente);
+                        }
+
                     } else {
                         $(".table-cliente > tbody > tr[id=cliente_" + idcliente + "]").html(tr).addClass("tr-success");
+                        if($(".table-endereco > tbody").length > 0){
+                            $(".table-cliente-endereco_" + idcliente + " > tbody").html("");
+                            consultaEndereco(idcliente);
+                        }
+                        limparEndereco();
+                        $(".table-endereco > tbody").html("");
                     }
 
                     limparCampos();
@@ -206,8 +237,9 @@ $(document).ready(function(){
     });
 
     $(document).on("click","button.btEditar",function(){
-        let idcliente = this.id.replace(/[^\d]+/g,'');
         limparCampos();
+        let idcliente = this.id.replace(/[^\d]+/g,'');
+        $(".table-endereco > tbody").html("");
         $("div.mensagem").removeClass("alert-danger", "alert-success").html("").hide();
 
         getTableDado("cliente", idcliente, "nome");
@@ -215,25 +247,71 @@ $(document).ready(function(){
         getTableDado("cliente", idcliente, "cpf");
         getTableDado("cliente", idcliente, "rg");
         getTableDado("cliente", idcliente, "telefone");
+        $("#nome").focus();
+
+         $.ajax({
+            url: "data/enderecoTable.php",
+            type: "POST",
+            data: {
+                action: "select",
+                idcliente: idcliente
+            }
+        }).done(function(result) {
+            result = JSON.parse(result);
+
+            $.each(result.data, function(index, value){
+                let idendereco = value.idendereco;
+
+                let tr = '<tr id="endereco_' + idendereco + '">';
+
+                tr += setTableColumn(idendereco, "cep", value.cep);
+                tr += setTableColumn(idendereco, "referencia", value.referencia);
+                tr += setTableColumn(idendereco, "endereco", value.endereco);
+                tr += setTableColumn(idendereco, "numero", value.numero);
+                tr += setTableColumn(idendereco, "complemento", value.complemento);
+                tr += setTableColumn(idendereco, "bairro", value.bairro);
+                tr += setTableColumn(idendereco, "estado", value.estado);
+                tr += setTableColumn(idendereco, "cidade", value.cidade);
+
+                tr += '<td style="width:16%">';
+
+                tr += setTableButton(idendereco, "Editar", "EditarEndereco", "primary");
+                tr += setTableButton(idendereco, "Deletar", "DeletarEndereco", "danger");
+
+                tr += '</td>';
+                tr += '</tr>';
+
+                $(".table-endereco > tbody").append(tr);
+            });
+        });
 
         $("#idcliente").val(idcliente);
     });
 
     $(document).on("click","button.btDeletar",function(){
         let idcliente = this.id.replace(/[^\d]+/g,'');
-        if(confirm("Deseja realmente deletar este cliente?")){
+
+        if(confirm("Deseja realmente remover este cliente?")){
 			$.ajax({
 				url: "data/clienteTable.php",
 				type: "POST",
 				data: {
-					action: "deletar",
+					action: "delete",
 					idcliente: idcliente
 				}
 			}).done(function(data) {
 				data = JSON.parse(data);
 
 				if(data.success == true){
-					$("div.mensagem").addClass("alert-success").html("<h4>Excluido com sucesso!</h4>").show();
+                    $(".table-cliente > tbody > tr[id=tr_cliente-endereco_" + idcliente + "]").remove();
+                    $(".mensagem-table").addClass("alert-success").html("<h4><b>Cliente</b> removido com sucesso!</h4>").show();
+
+                    setTimeout(function(){
+                        $(".mensagem-table").removeClass("alert-success").html("").hide();
+                        $(".table-cliente > tbody > tr[id=cliente_" + idcliente + "]").remove();
+                        limparCampos();
+                        limparEndereco();
+                    }, 3000);
 				}else{
 					$(".mensagem_erro").show();
 					$(".mensagem_erro").append("Não foi possivel excluir o registro");
@@ -246,6 +324,8 @@ $(document).ready(function(){
 
     $("#btCancelar").on("click", function(){
         limparCampos();
+        limparEndereco();
+        $(".table-endereco > tbody").html("");
         $("div.mensagem").removeClass("alert-danger", "alert-success").html("").hide();
     });
 });

@@ -11,9 +11,7 @@ class Endereco extends Base {
         $success = false;
 
         $db = $this->getDb();
-        $stm = $db->prepare('SELECT endereco.*
-            FROM endereco
-            WHERE endereco.idcliente = :idcliente');
+        $stm = $db->prepare('SELECT * FROM endereco WHERE endereco.idcliente = :idcliente');
         $stm->bindValue(':idcliente', $data->idcliente);
         $stm->execute();
         $result = $stm->fetchAll( PDO::FETCH_ASSOC);
@@ -25,8 +23,8 @@ class Endereco extends Base {
         echo json_encode(array(
             "data" => $result,
             "success" => $success
-            )
-        );
+        ));
+        exit;
     }
 
     public function insert() {
@@ -49,7 +47,7 @@ class Endereco extends Base {
                     complemento,
                     bairro,
                     cidade,
-                    uf,
+                    estado,
                     idcliente
                 ) VALUES (
                     :cep,
@@ -59,7 +57,7 @@ class Endereco extends Base {
                     :complemento,
                     :bairro,
                     :cidade,
-                    :uf,
+                    :estado,
                     :idcliente
                 );');
             $stm->bindValue(':cep', $endereco["cep"]);
@@ -69,12 +67,12 @@ class Endereco extends Base {
             $stm->bindValue(':complemento', $endereco["complemento"]);
             $stm->bindValue(':bairro', $endereco["bairro"]);
             $stm->bindValue(':cidade', $endereco["cidade"]);
-            $stm->bindValue(':uf', $endereco["estado"]);
+            $stm->bindValue(':estado', $endereco["estado"]);
             $stm->bindValue(':idcliente', $data->idcliente);
             $stm->execute();
-            $result = $stm;
+            $insert = $stm;
 
-            if($result->rowCount()){
+            if($insert->rowCount()){
                 $success = true;
             }else{
                 $success = false;
@@ -83,56 +81,71 @@ class Endereco extends Base {
 
         echo json_encode(array(
             "success" => $success
-            )
-        );
+        ));
+        exit;
     }
 
     public function update() {
         $data = (object) $_POST;
 
         $db = $this->getDb();
-        $stm = $db->prepare('UPDATE cliente SET
-                nome = :nome,
-                data_nascimento = :data_nascimento,
-                cpf = :cpf,
-                rg = :rg,
-                telefone = :telefone
-            WHERE idcliente = :idcliente');
+        $stm = $db->prepare('UPDATE endereco SET
+                cep         = :cep,
+                referencia  = :referencia,
+                endereco    = :endereco,
+                numero      = :numero,
+                complemento = :complemento,
+                bairro      = :bairro,
+                cidade      = :cidade,
+                estado      = :estado
+            WHERE idcliente = :idcliente
+                AND idendereco = :idendereco');
+        $stm->bindValue(':cep', $data->cep);
+        $stm->bindValue(':referencia', $data->referencia);
+        $stm->bindValue(':endereco', $data->endereco);
+        $stm->bindValue(':numero', $data->numero);
+        $stm->bindValue(':complemento', $data->complemento);
+        $stm->bindValue(':bairro', $data->bairro);
+        $stm->bindValue(':cidade', $data->cidade);
+        $stm->bindValue(':estado', $data->estado);
         $stm->bindValue(':idcliente', $data->idcliente);
-        $stm->bindValue(':nome',  $data->nome);
-        $stm->bindValue(':data_nascimento', $data->data_nascimento);
-        $stm->bindValue(':cpf', $data->cpf);
-        $stm->bindValue(':rg', $data->rg);
-        $stm->bindValue(':telefone', $data->telefone);
+        $stm->bindValue(':idendereco', $data->idendereco);
         $stm->execute();
-        $result = $stm;
+        $update = $stm;
 
-        if($result->rowCount()){
+        if($update->rowCount()){
             $success = true;
         }else{
             $success = false;
         }
 
         echo json_encode(array(
-            "success" => true
-            )
-        );
+            "success" => $success
+        ));
+        exit;
     }
 
-    public function deletar() {
+    public function delete() {
         $data = (object) $_POST;
 
         $db = $this->getDb();
-        $stm = $db->prepare('DElETE FROM aluno WHERE idaluno = :idaluno');
-        $stm->bindValue(':idaluno', $data->idaluno);
-        $stm->execute();
-        $result = $stm;
 
-        if($result->rowCount()){
+        $stm = $db->prepare('DELETE FROM endereco WHERE idendereco = :idendereco AND idcliente = :idcliente');
+        $stm->bindValue(':idendereco', $data->idendereco);
+        $stm->bindValue(':idcliente', $data->idcliente);
+        $stm->execute();
+        $delete = $stm;
+
+        if($delete->rowCount()){
             $success = true;
         }else{
             $success = false;
         }
+
+        echo json_encode(array(
+            "success" => $success
+        ));
+        exit;
     }
 }
 
