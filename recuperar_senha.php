@@ -20,7 +20,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Cadastro Administrador</h1>
+                    <h1 class="page-header">Recuperar Senha</h1>
                 </div>
             </div>
 
@@ -31,6 +31,7 @@
                 <div class="col-lg-6">
                     <form role="form">
                         <div class="form-group">
+                            <input type="hidden" name="idadministrador" id="idadministrador" value="">
                             <label>Nome</label><span class="obrigatorio">*</span>
                             <input class="form-control" name="nome" id="nome" placeholder="Informe o primeiro Nome">
                         </div>
@@ -44,26 +45,32 @@
                         </div>
                     </form>
                 </div>
-
+                <div class="col-lg-6">
+                    <form role="form">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" id="btConsultarLogin">Consultar Login</button>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div class="row">
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label>Senha</label><span class="obrigatorio">*</span>
-                        <input type="password" class="form-control" name="senha" id="senha" minlength="6">
+                        <input type="password" class="form-control" name="senha" id="senha" minlength="6" disabled>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label>Confirmar Senha</label><span class="obrigatorio">*</span>
-                        <input type="password" class="form-control" name="confirmar_senha" id="confirmar_senha" minlength="6">
+                        <input type="password" class="form-control" name="confirmar_senha" id="confirmar_senha" minlength="6" disabled>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-6">
                     <form role="form">
-                        <button type="button" class="btn btn-success" id="btCadastrar">Cadastrar</button>
+                        <button type="button" class="btn btn-success" id="btSalvarSenha" disabled>Salvar Nova Senha</button>
                         <button type="button" class="btn btn-danger" id="btCancelar">Cancelar</button>
                     </form>
                 </div>
@@ -74,6 +81,6 @@
     <script src="js/bootstrap.min.js"></script>
     <!-- Neste arquivo contém os métodos que podem ser utilizados em outras telas -->
     <script src="js/view/metodo.js"></script>
-    <script src="js/view/jsAdministrador.js"></script>
+    <script src="js/view/jsRecuperarSenha.js"></script>
     </body>
 </html>

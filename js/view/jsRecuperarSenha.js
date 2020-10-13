@@ -3,17 +3,61 @@ $(document).ready(function(){
         window.location = "login.php";
     });
 
-    $("#btCadastrar").on("click",function(){
+    $("#btConsultarLogin").on("click",function(){
+        let nome = $("#nome").val();
+        let login = $("#login").val();
+        let erro = false;
+        $("#btConsultarLogin").html("Consultando...").prop('disabled', true);
+        limparMensagem();
+        removerCSS();
+
+        erro = campoVazio("nome", nome);
+        erro = campoVazio("login", login);
+
+        if(erro == true){
+            mensagem("alert-danger","Preencha todos os campos");
+            habilitarBotao();
+
+        }else{
+			$.ajax({
+				url: "data/administradorTable.php",
+				type: "POST",
+				data: {
+					action: "recuperarSenha",
+					nome: nome,
+					login: login
+				}
+			}).done(function(data) {
+				data = JSON.parse(data);
+
+				if(data.success == true){
+                    mensagem("alert-warning","Informe uma nova senha!");
+
+                    habilitarBotao();
+
+                    $("#idadministrador").val(data.idadministrador);
+                    $("#senha").prop("disabled", false).focus();
+                    $("#confirmar_senha").prop("disabled", false);
+                    $("#btSalvarSenha").prop("disabled", false);
+				}else{
+                    mensagem("alert-danger","Nome e Login não encontrado!");
+                    habilitarBotao();
+                }
+			});
+        }
+    });
+
+    $("#btSalvarSenha").on("click",function(){
+        let idadministrador = $("#idadministrador").val();
         let nome = $("#nome").val();
         let login = $("#login").val();
         let senha = $("#senha").val();
         let confirmar_senha = $("#confirmar_senha").val();
         let erro = false;
-        $("#btCadastrar").html("Cadastrando...").prop('disabled', true);
-        $("#btCancel").prop('disabled', true);
+        $("#btSalvarSenha").html("Salvando...").prop('disabled', true);
         limparMensagem();
 
-        removerCSSAdministrador();
+        removerCSS();
 
         erro = campoVazio("nome", nome);
         erro = campoVazio("login", login);
@@ -29,46 +73,47 @@ $(document).ready(function(){
                 mensagem("alert-danger","Senha não pode ser menor que 6 caracteres!");
                 $("#senha").addClass("alert-danger").val("");
                 $("#confirmar_senha").addClass("alert-danger").val("");
-                habilitarBotao();
+                $("#btSalvarSenha").html("Salvar Nova Senha").prop("disabled", false);
 
             } else if(senha == confirmar_senha){
 
-				$.ajax({
-					url: "data/administradorTable.php",
-					type: "POST",
-					data: {
-						action: "insert",
-						nome: nome,
-						login: login,
-						senha: senha,
-					}
-				}).done(function(data) {
-					data = JSON.parse(data);
+                $.ajax({
+                    url: "data/administradorTable.php",
+                    type: "POST",
+                    data: {
+                        action: "update",
+                        idadministrador: idadministrador,
+                        nome: nome,
+                        login: login,
+                        senha: senha,
+                    }
+                }).done(function(data) {
+                    data = JSON.parse(data);
 
-					if(data.success == true){
-                        mensagem("alert-success","Cadastrado com sucesso! Redirecionando para página de login!");
+                    if(data.success == true){
+                        mensagem("alert-success","Nova senha cadastrada com Sucesso! Redirecionando para página de login!");
 
-                        $("#btCadastrar").html("Cadastrado");
+                        $("#btSalvarSenha").html("Salvar Nova Senha").prop("disabled", true);
 
-						setTimeout(function(){
+                        setTimeout(function(){
                             window.location = "index.php";
                         }, 3000);
-					}else{
+                    }else{
                         if(data.mensagem != ""){
                             mensagem("alert-danger",data.mensagem);
 
                         } else {
                             mensagem("alert-danger","Erro ao cadastrar!");
                         }
-                        habilitarBotao();
+                        $("#btSalvarSenha").html("Salvar Nova Senha").prop("disabled", false);
                     }
-				});
+                });
 
             } else {
                 mensagem("alert-danger","Senhas diferentes!");
                 $("#senha").addClass("alert-danger");
                 $("#confirmar_senha").addClass("alert-danger");
-                habilitarBotao();
+                $("#btSalvarSenha").html("Salvar Nova Senha").prop("disabled", false);
             }
         }
     });
@@ -110,42 +155,11 @@ $(document).ready(function(){
         }
     });
 
-    $("#login").on("focusout", function(){
-        let login = this.value;
-        limparMensagem();
-
-        if(login != ""){
-            $.ajax({
-                url: "data/administradorTable.php",
-                type: "POST",
-                data: {
-                    action: "verificarLogin",
-                    login: login
-                }
-            }).done(function(data) {
-                data = JSON.parse(data);
-
-                if(data.success == true){
-                    mensagem("alert-danger","Login já em uso no sistema, tente outro login!");
-
-                } else {
-                    $("#login").addClass("alert-success");
-
-                    setTimeout(function(){
-                        $("#login").removeClass("alert-success");
-                    }, 3000);
-                }
-            });
-
-        }
-    });
-
     function habilitarBotao(){
-        $("#btCadastrar").html("Cadastrar").prop('disabled', false);
-        $("#btCancel").prop('disabled', false);
+        $("#btConsultarLogin").html("Consultar Login").prop('disabled', false);
     }
 
-    function removerCSSAdministrador(){
+    function removerCSS(){
         $("#nome").removeClass("campo_vazio");
         $("#login").removeClass("campo_vazio");
         $("#senha").removeClass("campo_vazio");
@@ -153,6 +167,6 @@ $(document).ready(function(){
     }
 
     function limparMensagem(){
-        $("div.mensagem").removeClass("alert-danger alert-success").html("").hide();
+        $("div.mensagem").removeClass("alert-danger alert-success alert-warning").html("").hide();
     }
 });
